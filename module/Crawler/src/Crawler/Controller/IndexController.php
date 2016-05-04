@@ -11,6 +11,7 @@ class IndexController extends AbstractActionController
     {
 
 
+        $base = "http://www.vik-vt.com/";
         $newUrl = "http://www.vik-vt.com/?mod=news";
         $crawler = new Crawler;
         $crawler->addHTMLContent(file_get_contents($newUrl), 'UTF-8');
@@ -23,6 +24,33 @@ class IndexController extends AbstractActionController
         $firstDate = $crawler->filterXPath("//div[@class='mb5 date']")->first()->text();
         $firstIdentifier = $crawler->filterXPath("//div[@class='mb15 text_06']/a")->first()->attr("href");
 
+        //ABOUT PAGE
+
+        $currentPage = $base . $firstIdentifier;
+        $currentCrawler = new Crawler;
+        $currentCrawler->addHTMLContent(file_get_contents($currentPage), 'UTF-8');
+        if ($currentCrawler->filter("body")->text() == "404")
+        {
+            return array();
+        }
+
+        $content = $currentCrawler->filter('div.content');
+
+        $aboutTime = $content->filterXPath("//div[@class='mb15 text_08 fs14']")->text();
+
+        $actualMessage = $content->filter("div.fs12");
+
+        $nodeValues = $actualMessage->filter('strong')->each(function ($node, $i) {
+
+            return array(
+                $node->text()
+            );
+
+        });
+
+        var_dump($aboutTime, $nodeValues);
+
+        //END OF ABOUT PAGE
 
         $nodeValues = $crawler->filter('div.list_item')->each(function ($node, $i) {
 
