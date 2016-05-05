@@ -40,6 +40,8 @@ class IndexController extends AbstractActionController
 
         $actualMessage = $content->filter("div.fs12");
 
+        $aboutMessage = $actualMessage->text();
+
         $nodeValues = $actualMessage->filter('strong')->each(function ($node, $i) {
 
             return array(
@@ -48,7 +50,7 @@ class IndexController extends AbstractActionController
 
         });
 
-        var_dump($aboutTime, $nodeValues);
+        var_dump($aboutTime, $nodeValues, $aboutMessage);
 
         //END OF ABOUT PAGE
 
