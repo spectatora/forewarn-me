@@ -44,6 +44,11 @@ return array(
         'factories' => array(
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
         ),
+        'invokables' => array(
+            'Crawler\Service\StrategyFactory' => 'PageBuilder\Service\PageBackground\StrategyFactory',
+            'Crawler\ServiceStrategy\ViKVT' => 'Crawler\Service\Strategy\ViKVT',
+
+        ),
     ),
     'controllers' => array(
         'invokables' => array(
