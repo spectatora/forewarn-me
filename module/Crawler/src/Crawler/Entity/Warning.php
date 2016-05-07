@@ -10,6 +10,7 @@ namespace Crawler\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Application\Entity\AbstractEntity;
+use Application\Entity\Provider;
 
 /**
  * @ORM\Table(name="warnings")
@@ -42,9 +43,13 @@ class Warning extends AbstractEntity
     private $message;
 
     /**
-     * @var string
+     * @var Provider
      *
-     * @ORM\Column(name="provider", type="string", length=63, nullable=false)
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Provider")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="providerId", referencedColumnName="id", onDelete="SET NULL")
+     * })
+     *
      */
     private $provider;
 
@@ -111,7 +116,7 @@ class Warning extends AbstractEntity
     }
 
     /**
-     * @param string $provider
+     * @param \Application\Entity\Provider $provider
      */
     public function setProvider($provider)
     {
@@ -119,7 +124,7 @@ class Warning extends AbstractEntity
     }
 
     /**
-     * @return string
+     * @return \Application\Entity\Provider
      */
     public function getProvider()
     {
