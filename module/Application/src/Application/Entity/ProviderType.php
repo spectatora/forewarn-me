@@ -13,7 +13,7 @@ use Application\Entity\AbstractEntity;
 
 /**
  * @ORM\Table(name="providerTypes")
- * @ORM\Entity(repositoryClass="Application\Model\ProviderTypes")
+ * @ORM\Entity(repositoryClass="Application\Model\ProviderType")
  */
 class ProviderType extends AbstractEntity
 {
