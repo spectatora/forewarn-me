@@ -59,6 +59,9 @@ return array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory',
         ),
+        'invokables' => array(
+
+        ),
         'factories' => array(
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
         ),
@@ -113,5 +116,8 @@ return array(
                 )
             )
         )
+    ),
+    'data-fixture' => array(
+        'Application_fixture' => __DIR__ . '/../src/Application/Fixtures',
     ),
 );

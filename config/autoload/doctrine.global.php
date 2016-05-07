@@ -10,7 +10,8 @@ return array(
                     'port' => '0',
                     'dbname' => 'forewarnme',
                     'user' => 'root',
-                    'password' => ''
+                    'password' => '',
+                    'charset' => 'utf8'
                 ),
             ),
         )
