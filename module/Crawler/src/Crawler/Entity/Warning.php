@@ -13,7 +13,7 @@ use Application\Entity\AbstractEntity;
 
 /**
  * @ORM\Table(name="warnings")
- * @ORM\Entity(repositoryClass="PageBuilder\Model\Elements")
+ * @ORM\Entity(repositoryClass="Crawler\Model\Warnings")
  */
 class Warning extends AbstractEntity
 {
