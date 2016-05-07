@@ -45,7 +45,7 @@ return array(
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
         ),
         'invokables' => array(
-            'Crawler\Service\StrategyFactory' => 'PageBuilder\Service\PageBackground\StrategyFactory',
+            'Crawler\Service\StrategyFactory' => 'Crawler\Service\StrategyFactory',
             'Crawler\ServiceStrategy\ViKVT' => 'Crawler\Service\Strategy\ViKVT',
 
         ),
