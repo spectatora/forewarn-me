@@ -80,7 +80,7 @@ return array(
     ),
     'doctrine' => array(
         'driver' => array(
-            'application_entity' => array(
+            'crawler_entity' => array(
                 'class' =>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'paths' => array(__DIR__ . '/../src/Crawler/Entity')
             ),
