@@ -11,6 +11,11 @@
         "php": ">=5.5",
         "zendframework/zendframework": "~2.5",
         "symfony/dom-crawler": "3.0.4",
-        "symfony/css-selector": "~2.8"
+        "symfony/css-selector": "~2.8",
+        "doctrine/common": "2.4.*",
+        "doctrine/dbal": "2.4.*",
+        "doctrine/orm": "2.4.*",
+        "doctrine/doctrine-orm-module": "0.*",
+        "hounddog/doctrine-data-fixture-module": "0.0.*"
     }
 }
