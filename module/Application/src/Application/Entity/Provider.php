@@ -36,14 +36,14 @@ class Provider extends AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="key", type="string", length=63, nullable=false)
+     * @ORM\Column(name="providerKey", type="string", length=256, nullable=false)
      */
-    private $key;
+    private $providerKey;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="area", type="string", length=63, nullable=false)
+     * @ORM\Column(name="area", type="string", length=256, nullable=false)
      */
     private $area;
 
@@ -91,22 +91,6 @@ class Provider extends AbstractEntity
     }
 
     /**
-     * @param string $key
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
-
-    /**
      * @param string $name
      */
     public function setName($name)
@@ -120,6 +104,22 @@ class Provider extends AbstractEntity
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $providerKey
+     */
+    public function setProviderKey($providerKey)
+    {
+        $this->providerKey = $providerKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProviderKey()
+    {
+        return $this->providerKey;
     }
 
     /**
