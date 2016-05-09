@@ -18,10 +18,9 @@ class ViKVT extends AbstractStrategy
     public function process($data)
     {
 
-        $base = "http://www.vik-vt.com/";
-        $newUrl = "http://www.vik-vt.com/?mod=news";
+        $newsUrl = self::PROVIDER_URL . "?mod=news";
         $crawler = new Crawler;
-        $crawler->addHTMLContent(file_get_contents($newUrl), 'UTF-8');
+        $crawler->addHTMLContent(file_get_contents($newsUrl), 'UTF-8');
 
         if ($crawler->filter("body")->text() == "404")
         {
