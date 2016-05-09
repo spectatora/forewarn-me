@@ -31,33 +31,12 @@ class ViKVT extends AbstractStrategy
         $firstDate = $crawler->filterXPath("//div[@class='mb5 date']")->first()->text();
         $firstIdentifier = $crawler->filterXPath("//div[@class='mb15 text_06']/a")->first()->attr("href");
 
+        print '<hr />';
+        var_dump($firstDate,$firstIdentifier);
+        print '<hr />';
         //ABOUT PAGE
 
-        $currentPage = $base . $firstIdentifier;
-        $currentCrawler = new Crawler;
-        $currentCrawler->addHTMLContent(file_get_contents($currentPage), 'UTF-8');
-        if ($currentCrawler->filter("body")->text() == "404")
-        {
-            return array();
-        }
-
-        $content = $currentCrawler->filter('div.content');
-
-        $aboutTime = $content->filterXPath("//div[@class='mb15 text_08 fs14']")->text();
-
-        $actualMessage = $content->filter("div.fs12");
-
-        $aboutMessage = $actualMessage->text();
-
-        $nodeValues = $actualMessage->filter('strong')->each(function ($node, $i) {
-
-            return array(
-                $node->text()
-            );
-
-        });
-
-        var_dump($aboutTime, $nodeValues, $aboutMessage);
+        $this->processSingleEntry($firstIdentifier);
 
         //END OF ABOUT PAGE
 
@@ -82,6 +61,30 @@ class ViKVT extends AbstractStrategy
 
     public function processSingleEntry($uniqueIdentifier)
     {
+        $currentPage = self::PROVIDER_URL . $uniqueIdentifier;
+        $currentCrawler = new Crawler;
+        $currentCrawler->addHTMLContent(file_get_contents($currentPage), 'UTF-8');
+        if ($currentCrawler->filter("body")->text() == "404")
+        {
+            return array();
+        }
 
+        $content = $currentCrawler->filter('div.content');
+
+        $aboutTime = $content->filterXPath("//div[@class='mb15 text_08 fs14']")->text();
+
+        $actualMessage = $content->filter("div.fs12");
+
+        $aboutMessage = $actualMessage->text();
+
+        $nodeValues = $actualMessage->filter('strong')->each(function ($node, $i) {
+
+            return array(
+                $node->text()
+            );
+
+        });
+
+        var_dump($aboutTime, $nodeValues, $aboutMessage);
     }
 } 
