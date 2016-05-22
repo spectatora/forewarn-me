@@ -47,6 +47,7 @@ return array(
         'invokables' => array(
             'Crawler\Service\StrategyFactory' => 'Crawler\Service\StrategyFactory',
             'Crawler\ServiceStrategy\ViKVT' => 'Crawler\Service\Strategy\ViKVT',
+            'Crawler\ServiceStrategy\EnergoVT' => 'Crawler\Service\Strategy\EnergoVT',
 
         ),
     ),
