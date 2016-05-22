@@ -27,15 +27,30 @@ class Provider extends AbstractFixture implements DependentFixtureInterface
             $ViKProvider->setArea('Велико Търново');
             $ViKProvider->setType($this->getReference('vik'));
             $ViKProvider->setProviderKey('ViKVT');
-
-            //$manager->getReference('Application\Entity\ProviderType', 1)
         }
 
 
         $manager->persist($ViKProvider);
+
+
+        $energoVTProvider = $manager->getRepository('Application\Entity\Provider')->findOneBy(['providerKey' => 'energoVT']);
+
+        if(!$energoVTProvider) {
+            //Provider does not exist, update
+            $energoVTProvider = new ProviderEntity();
+            $energoVTProvider->setName('ЕнергоПро Велико Търново');
+            $energoVTProvider->setArea('Велико Търново');
+            $energoVTProvider->setType($this->getReference('electricity'));
+            $energoVTProvider->setProviderKey('energoVT');
+        }
+
+
+        $manager->persist($energoVTProvider);
+
         $manager->flush();
 
         $this->addReference('ViKVT', $ViKProvider);
+        $this->addReference('energoVT', $energoVTProvider);
 
     }
 
