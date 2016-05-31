@@ -11,6 +11,7 @@ class IndexController extends AbstractActionController
     {
 
         $providerKey = 'ViKVT';
+        $providerKey = 'energoVT';
 
 
         /** @var \Crawler\Service\StrategyFactory $strategyFactory */
