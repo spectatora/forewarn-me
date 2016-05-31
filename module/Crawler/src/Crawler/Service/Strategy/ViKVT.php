@@ -30,6 +30,7 @@ class ViKVT extends AbstractStrategy
         $firstDate = $crawler->filterXPath("//div[@class='mb5 date']")->first()->text();
         $firstIdentifier = $crawler->filterXPath("//div[@class='mb15 text_06']/a")->first()->attr("href");
 
+
         print '<hr />';
         var_dump($firstDate,$firstIdentifier);
         print '<hr />';

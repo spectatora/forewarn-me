@@ -13,10 +13,10 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class EnergoVT extends AbstractStrategy
 {
-    //const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/Oblast-Veliko-Tarnovo";
+    const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/Oblast-Veliko-Tarnovo";
 
-
-    const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/ROC-Varna";
+    //const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/ROC-Varna";
+    //const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/Oblast-Shumen";
 
     public function process($data)
     {
@@ -33,58 +33,38 @@ class EnergoVT extends AbstractStrategy
 
         $firstText = $crawler->filter("div#div_tab_1")->filter('p')->first()->text();
         $firstTime = $crawler->filter("div#div_tab_1")->filter('p')->first()->filterXPath("//strong")->text();
+        $firstUniqueIdentifier = sha1($firstText);
 
-        var_dump($firstText, $firstTime);
+        if (!empty($firstText) && is_string($firstText))
+        {
+            $trimmedData = trim($firstText);
+
+            if ($trimmedData == EnergoProData::NO_WARNINGS)
+            {
+                print 'no warnings';
+                die;
+            }
+        }
+
+        var_dump($firstText, $firstTime, $firstUniqueIdentifier);
         print '<br /><hr />';
 
         $nodeValues = $crawler->filter("div#div_tab_1")->filter('p')->each(function ($node, $i) {
 
             $time = $node->filterXPath("//strong")->text();
             $text = $node->text();
+            $uniqueIdenfitier = sha1($text);
 
 
             return array(
                 'time' => $time,
-                'message' => $text
+                'message' => $text,
+                'uniqueIdentifier' => $uniqueIdenfitier
             );
 
         });
-
-        var_dump($nodeValues);die;
-
-
-        $todayAndTomorrowContainer = $crawler->filter("div#div_tab_1")->text();
-
-        var_dump($todayAndTomorrowContainer);
-        die;
-
-        $firstDate = $crawler->filterXPath("//div[@class='mb5 date']")->first()->text();
-        $firstIdentifier = $crawler->filterXPath("//div[@class='mb15 text_06']/a")->first()->attr("href");
-
-        print '<hr />';
-        var_dump($firstDate,$firstIdentifier);
-        print '<hr />';
-        //ABOUT PAGE
-
-        $this->processSingleEntry($firstIdentifier);
-
-        //END OF ABOUT PAGE
-
-        $nodeValues = $crawler->filter('div.list_item')->each(function ($node, $i) {
-
-            $time = $node->filterXPath("//div[@class='mb5 date']")->text();
-            $identifier = $node->filterXPath("//div[@class='mb15 text_06']/a")->first()->attr("href");
-
-            return array(
-                'time' => $time,
-                'identifier' => $identifier
-            );
-
-        });
-
 
         var_dump($nodeValues);
-
 
         return;
     }
