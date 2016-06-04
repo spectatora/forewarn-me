@@ -90,6 +90,22 @@ class ViKVT extends AbstractStrategy
 
         });
 
+        $re = "/\\d{2}.\\d{2}.\\d{4}/im";
+
+        preg_match($re, $aboutMessage, $dateMatches);
+
+        var_dump($dateMatches);
+
+        print ' <br /><hr /><br />';
+
+        $reTime = "/от \\d{2}:\\d{2}/im";
+
+        preg_match($reTime, $aboutMessage, $timeMatches);
+
+        var_dump($timeMatches);
+
+        print ' <br /><hr /><br />';
+
         var_dump($aboutTime, $nodeValues, $aboutMessage);
     }
 } 
