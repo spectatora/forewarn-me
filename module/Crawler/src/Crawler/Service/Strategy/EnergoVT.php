@@ -10,6 +10,7 @@ namespace Crawler\Service\Strategy;
 
 use Crawler\Service\Strategy\AbstractStrategy;
 use Symfony\Component\DomCrawler\Crawler;
+use Crawler\Service\UniqueIdentifier;
 
 class EnergoVT extends AbstractStrategy
 {
@@ -33,7 +34,7 @@ class EnergoVT extends AbstractStrategy
 
         $firstText = $crawler->filter("div#div_tab_1")->filter('p')->first()->text();
         $firstTime = $crawler->filter("div#div_tab_1")->filter('p')->first()->filterXPath("//strong")->text();
-        $firstUniqueIdentifier = sha1($firstText);
+        $firstUniqueIdentifier = UniqueIdentifier::generate($firstText);
 
         if (!empty($firstText) && is_string($firstText))
         {
@@ -53,7 +54,7 @@ class EnergoVT extends AbstractStrategy
 
             $time = $node->filterXPath("//strong")->text();
             $text = $node->text();
-            $uniqueIdenfitier = sha1($text);
+            $uniqueIdenfitier = UniqueIdentifier::generate($text);
 
 
             return array(

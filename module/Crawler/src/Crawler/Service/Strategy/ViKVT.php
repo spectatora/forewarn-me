@@ -9,6 +9,7 @@
 namespace Crawler\Service\Strategy;
 
 use Crawler\Service\Strategy\AbstractStrategy;
+use Crawler\Service\UniqueIdentifier;
 use Symfony\Component\DomCrawler\Crawler;
 
 class ViKVT extends AbstractStrategy
@@ -44,10 +45,13 @@ class ViKVT extends AbstractStrategy
 
             $time = $node->filterXPath("//div[@class='mb5 date']")->text();
             $identifier = $node->filterXPath("//div[@class='mb15 text_06']/a")->first()->attr("href");
+            $uniqueIdentifier = UniqueIdentifier::generate($identifier);
+
 
             return array(
                 'time' => $time,
-                'identifier' => $identifier
+                'identifier' => $identifier,
+                'uniqueIdentifier' => $uniqueIdentifier
             );
 
         });
