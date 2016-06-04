@@ -13,9 +13,9 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class EnergoVT extends AbstractStrategy
 {
-    const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/Oblast-Veliko-Tarnovo";
+    //const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/Oblast-Veliko-Tarnovo";
 
-    //const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/ROC-Varna";
+    const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/ROC-Varna";
     //const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/Oblast-Shumen";
 
     public function process($data)
