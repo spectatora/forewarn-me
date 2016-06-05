@@ -10,6 +10,7 @@ namespace Crawler\Service\Strategy;
 
 use Crawler\Service\Strategy\AbstractStrategy;
 use Crawler\Service\UniqueIdentifier;
+use Crawler\Service\DateTimeExtractor;
 use Symfony\Component\DomCrawler\Crawler;
 
 class ViKVT extends AbstractStrategy
@@ -90,22 +91,9 @@ class ViKVT extends AbstractStrategy
 
         });
 
-        $re = "/\\d{2}.\\d{2}.\\d{4}/im";
+       $dateTime = DateTimeExtractor::extractDateTime($aboutMessage);
 
-        preg_match($re, $aboutMessage, $dateMatches);
 
-        var_dump($dateMatches);
-
-        print ' <br /><hr /><br />';
-
-        $reTime = "/от \\d{2}:\\d{2}/im";
-
-        preg_match($reTime, $aboutMessage, $timeMatches);
-
-        var_dump($timeMatches);
-
-        print ' <br /><hr /><br />';
-
-        var_dump($aboutTime, $nodeValues, $aboutMessage);
+        var_dump($dateTime,$aboutTime, $nodeValues, $aboutMessage);
     }
 } 
