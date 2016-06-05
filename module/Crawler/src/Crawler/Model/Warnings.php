@@ -14,8 +14,20 @@ use Crawler\Entity\Warning as WarningEntity;
 
 class Warnings extends EntityRepository
 {
+
     /**
-     * Find Site Section by ID
+     * Find Warning by unique Identifier
+     *
+     * @param $identifier
+     * @return null|object
+     */
+    public function findByUniqueIdentifier($identifier)
+    {
+        return $this->findOneBy(['uniqueIdentifier' => $identifier]);
+    }
+
+    /**
+     * Find Warning by ID
      *
      * @param integer $id
      * @return WarningEntity|null
@@ -26,7 +38,7 @@ class Warnings extends EntityRepository
     }
 
     /**
-     * Saves page
+     * Saves Warning
      *
      * @param WarningEntity $warning
      * @return $this
@@ -39,7 +51,7 @@ class Warnings extends EntityRepository
     }
 
     /**
-     * Update page
+     * Update Warning
      *
      * @param WarningEntity $warning
      * @return $this
@@ -52,7 +64,7 @@ class Warnings extends EntityRepository
     }
 
     /**
-     * Delete page
+     * Delete Warning
      *
      * @param WarningEntity $warning
      * @return $this
@@ -65,7 +77,7 @@ class Warnings extends EntityRepository
     }
 
     /**
-     * Gets all site sections
+     * Gets all warnings
      *
      * @return WarningEntity[]
      */
