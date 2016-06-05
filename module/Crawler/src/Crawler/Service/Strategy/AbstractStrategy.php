@@ -20,6 +20,11 @@ abstract class AbstractStrategy implements ServiceLocatorAwareInterface, Strateg
     protected $serviceManager;
 
     /**
+     * @var \Crawler\Model\Warnings
+     */
+    protected $warningsModel;
+
+    /**
      *
      * @param ServiceLocatorInterface $serviceLocator
      */
@@ -36,6 +41,23 @@ abstract class AbstractStrategy implements ServiceLocatorAwareInterface, Strateg
     {
         return $this->serviceManager;
     }
+
+    /**
+     * @return \Crawler\Model\Warnings
+     */
+    public function getWarningsModel()
+    {
+        if (!isset($this->warningsModel))
+        {
+            /** @var \Crawler\Model\Warnings $warningsModel */
+            $warningsModel = $this->serviceManager->get('Doctrine\ORM\EntityManager')->getRepository('Crawler\Entity\Warning');
+            $this->warningsModel = $warningsModel;
+
+        }
+
+        return $this->warningsModel;
+    }
+
 
     public function process($data)
     {
