@@ -65,6 +65,13 @@ class StrategyFactory implements ServiceLocatorAwareInterface
             throw new StrategyWrongInterfaceException("$className must implement StrategyInterface");
         }
 
+        /** @var \Application\Model\Provider $providerModel */
+        $providerModel = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getRepository('Application\Entity\Provider');
+        /** @var \Application\Entity\Provider $provider */
+        $provider = $providerModel->findOneBy(array('providerKey' => $strategyIndicator));
+
+        $strategyInstance->setProvider($provider);
+
         return $strategyInstance;
     }
 } 

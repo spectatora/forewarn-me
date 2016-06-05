@@ -25,6 +25,11 @@ abstract class AbstractStrategy implements ServiceLocatorAwareInterface, Strateg
     protected $warningsModel;
 
     /**
+     * @var \Application\Entity\Provider
+     */
+    protected $provider;
+
+    /**
      *
      * @param ServiceLocatorInterface $serviceLocator
      */
@@ -56,6 +61,22 @@ abstract class AbstractStrategy implements ServiceLocatorAwareInterface, Strateg
         }
 
         return $this->warningsModel;
+    }
+
+    /**
+     * @param \Application\Entity\Provider $provider
+     */
+    public function setProvider($provider)
+    {
+        $this->provider = $provider;
+    }
+
+    /**
+     * @return \Application\Entity\Provider
+     */
+    public function getProvider()
+    {
+        return $this->provider;
     }
 
 

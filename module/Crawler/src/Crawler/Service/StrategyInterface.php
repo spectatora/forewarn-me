@@ -10,4 +10,6 @@ namespace Crawler\Service;
 
 interface StrategyInterface {
     public function process($data);
+
+    public function setProvider($provider);
 } 
