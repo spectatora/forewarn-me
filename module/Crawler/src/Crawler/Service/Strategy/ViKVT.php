@@ -8,6 +8,7 @@
 
 namespace Crawler\Service\Strategy;
 
+use Crawler\Entity\Warning;
 use Crawler\Service\Strategy\AbstractStrategy;
 use Crawler\Service\UniqueIdentifier;
 use Crawler\Service\DateTimeExtractor;
@@ -39,12 +40,11 @@ class ViKVT extends AbstractStrategy
         $foundEntity = $warningsModel->findByUniqueIdentifier($firstUniqueIdenfitier);
 
 
-        print '<hr />';
-        var_dump($firstDate,$firstIdentifier, $firstUniqueIdenfitier);
-        print '<hr />';
-        //ABOUT PAGE
+        if (!empty($foundEntity))
+        {
+            return;
+        }
 
-        $this->processSingleEntry($firstIdentifier);
 
         //END OF ABOUT PAGE
 
@@ -63,7 +63,25 @@ class ViKVT extends AbstractStrategy
 
         });
 
+        foreach($nodeValues as $nodeElement)
+        {
 
+            $uniqueidentifier = $nodeElement['uniqueIdentifier'];
+
+            /** @var  $foundEntity */
+            $foundEntity = $warningsModel->findByUniqueIdentifier($uniqueidentifier);
+
+            if (!empty($foundEntity))
+            {
+                continue;
+            }
+
+
+            $this->processSingleEntry($nodeElement['identifier']);
+        }
+
+
+        print ' in here';die;
         var_dump($nodeValues);
 
 
@@ -91,9 +109,7 @@ class ViKVT extends AbstractStrategy
 
         $nodeValues = $actualMessage->filter('strong')->each(function ($node, $i) {
 
-            return array(
-                $node->text()
-            );
+            return $node->text();
 
         });
 
@@ -101,12 +117,29 @@ class ViKVT extends AbstractStrategy
 
         $uniqueIdentifier = UniqueIdentifier::generate($identifier);
 
-        if (!empty($nodeValues) && is_array($nodeValues) && count($nodeValues) > 1)
+        $places = '';
+
+        if (!empty($nodeValues) && is_array($nodeValues) && count($nodeValues) > 0)
         {
-            $places = trim($nodeValues[1][0]);
+            if (count($nodeValues) > 1)
+            {
+                $places = trim($nodeValues[1]);
+            } else {
+                $places = trim($nodeValues[0]);
+            }
         }
 
+        $warningsEntity = new Warning(array(
+            'uniqueIdentifier' => $uniqueIdentifier,
+            'time' => $dateTime,
+            'message' => $aboutMessage,
+            'provider' => $this->getProvider(),
+            'places' => $places,
+        ));
 
-        var_dump($places, $uniqueIdentifier, $dateTime,$aboutTime, $nodeValues, $aboutMessage);
+        $this->getWarningsModel()->save($warningsEntity);
+
+        //var_dump($places, $uniqueIdentifier, $dateTime,$aboutTime, $nodeValues[0], $aboutMessage, $this->getProvider());
+
     }
 } 
