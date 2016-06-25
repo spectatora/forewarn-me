@@ -8,15 +8,17 @@
 
 namespace Crawler\Service\Strategy;
 
+use Crawler\Entity\Warning;
 use Crawler\Service\Strategy\AbstractStrategy;
 use Symfony\Component\DomCrawler\Crawler;
 use Crawler\Service\UniqueIdentifier;
+use Crawler\Service\DateTimeExtractor;
 
 class EnergoVT extends AbstractStrategy
 {
-    //const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/Oblast-Veliko-Tarnovo";
+    const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/Oblast-Veliko-Tarnovo";
 
-    const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/ROC-Varna";
+    //const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/ROC-Varna";
     //const PROVIDER_URL = "http://www.energo-pro-grid.bg/bg/Oblast-Shumen";
 
     public function process($data)
@@ -33,23 +35,30 @@ class EnergoVT extends AbstractStrategy
 
 
         $firstText = $crawler->filter("div#div_tab_1")->filter('p')->first()->text();
-        $firstTime = $crawler->filter("div#div_tab_1")->filter('p')->first()->filterXPath("//strong")->text();
         $firstUniqueIdentifier = UniqueIdentifier::generate($firstText);
 
         if (!empty($firstText) && is_string($firstText))
         {
             $trimmedData = trim($firstText);
-
+            /** @note No warnings found on the page - SKIP  */
             if ($trimmedData == EnergoProData::NO_WARNINGS)
             {
-                print 'no warnings';
-                die;
+               return;
             }
         }
 
-        var_dump($firstText, $firstTime, $firstUniqueIdentifier);
-        print '<br /><hr />';
+        /** @var \Crawler\Model\Warnings $warningsModel */
+        $warningsModel = $this->getWarningsModel();
+        /** @var  $foundEntity */
+        $foundEntity = $warningsModel->findByUniqueIdentifier($firstUniqueIdentifier);
 
+        /** @note Last published item already in our db so skip this operation */
+        if (!empty($foundEntity))
+        {
+            return;
+        }
+
+        /** @note Loop through all the results */
         $nodeValues = $crawler->filter("div#div_tab_1")->filter('p')->each(function ($node, $i) {
 
             $time = $node->filterXPath("//strong")->text();
@@ -57,45 +66,45 @@ class EnergoVT extends AbstractStrategy
             $uniqueIdenfitier = UniqueIdentifier::generate($text);
 
 
+            /** @note Extract date time object when this occurred */
+            $dateTimeValue = DateTimeExtractor::extractDateTime($time);
+
+
             return array(
-                'time' => $time,
+                'time' => $dateTimeValue,
                 'message' => $text,
-                'uniqueIdentifier' => $uniqueIdenfitier
+                'uniqueIdentifier' => $uniqueIdenfitier,
+                'places' => ""
             );
 
         });
 
-        var_dump($nodeValues);
+
+        foreach($nodeValues as $nodeElement)
+        {
+            /** @note Get unique identifier */
+            $uniqueidentifier = $nodeElement['uniqueIdentifier'];
+
+            /** @var  $foundEntity */
+            $foundEntity = $warningsModel->findByUniqueIdentifier($uniqueidentifier);
+            /** @note If we have it in db - SKIP */
+            if (!empty($foundEntity))
+            {
+                continue;
+            }
+            /** @note Process single entry - add it to db */
+            $this->processSingleEntry($nodeElement);
+        }
 
         return;
     }
 
-    public function processSingleEntry($uniqueIdentifier)
+    public function processSingleEntry($entryData)
     {
-        $currentPage = self::PROVIDER_URL . $uniqueIdentifier;
-        $currentCrawler = new Crawler;
-        $currentCrawler->addHTMLContent(file_get_contents($currentPage), 'UTF-8');
-        if ($currentCrawler->filter("body")->text() == "404")
-        {
-            return array();
-        }
+        /** @note Prepare warning entity and populate it with correct data */
+        $warningsEntity = new Warning($entryData);
+        $warningsEntity->setProvider($this->getProvider());
 
-        $content = $currentCrawler->filter('div.content');
-
-        $aboutTime = $content->filterXPath("//div[@class='mb15 text_08 fs14']")->text();
-
-        $actualMessage = $content->filter("div.fs12");
-
-        $aboutMessage = $actualMessage->text();
-
-        $nodeValues = $actualMessage->filter('strong')->each(function ($node, $i) {
-
-            return array(
-                $node->text()
-            );
-
-        });
-
-        var_dump($aboutTime, $nodeValues, $aboutMessage);
+        $this->getWarningsModel()->save($warningsEntity);
     }
 } 

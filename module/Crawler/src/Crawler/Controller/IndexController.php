@@ -10,8 +10,8 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
 
-        $providerKey = 'ViKVT';
-        //$providerKey = 'energoVT';
+        //$providerKey = 'ViKVT';
+        $providerKey = 'energoVT';
 
 
         /** @var \Crawler\Service\StrategyFactory $strategyFactory */
