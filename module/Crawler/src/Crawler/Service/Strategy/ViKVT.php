@@ -39,15 +39,14 @@ class ViKVT extends AbstractStrategy
         /** @var  $foundEntity */
         $foundEntity = $warningsModel->findByUniqueIdentifier($firstUniqueIdenfitier);
 
-
+        /** @note Last published item already in our db so skip this operation */
         if (!empty($foundEntity))
         {
             return;
         }
 
 
-        //END OF ABOUT PAGE
-
+        /** @note Loop through all the results */
         $nodeValues = $crawler->filter('div.list_item')->each(function ($node, $i) {
 
             $time = $node->filterXPath("//div[@class='mb5 date']")->text();
@@ -65,25 +64,19 @@ class ViKVT extends AbstractStrategy
 
         foreach($nodeValues as $nodeElement)
         {
-
+            /** @note Get unique identifier */
             $uniqueidentifier = $nodeElement['uniqueIdentifier'];
 
             /** @var  $foundEntity */
             $foundEntity = $warningsModel->findByUniqueIdentifier($uniqueidentifier);
-
+            /** @note If we have it in db - SKIP */
             if (!empty($foundEntity))
             {
                 continue;
             }
-
-
+            /** @note Process single entry - add it to db */
             $this->processSingleEntry($nodeElement['identifier']);
         }
-
-
-        print ' in here';die;
-        var_dump($nodeValues);
-
 
         return;
     }
@@ -112,13 +105,13 @@ class ViKVT extends AbstractStrategy
             return $node->text();
 
         });
-
-       $dateTime = DateTimeExtractor::extractDateTime($aboutMessage);
-
+         /** @note Extract date time object when this occurred */
+         $dateTime = DateTimeExtractor::extractDateTime($aboutMessage);
+        /** @note Generate unique identifier */
         $uniqueIdentifier = UniqueIdentifier::generate($identifier);
 
         $places = '';
-
+        /** @note Get information about places */
         if (!empty($nodeValues) && is_array($nodeValues) && count($nodeValues) > 0)
         {
             if (count($nodeValues) > 1)
@@ -128,7 +121,7 @@ class ViKVT extends AbstractStrategy
                 $places = trim($nodeValues[0]);
             }
         }
-
+        /** @note Prepare warning entity and populate it with correct data */
         $warningsEntity = new Warning(array(
             'uniqueIdentifier' => $uniqueIdentifier,
             'time' => $dateTime,
@@ -138,8 +131,5 @@ class ViKVT extends AbstractStrategy
         ));
 
         $this->getWarningsModel()->save($warningsEntity);
-
-        //var_dump($places, $uniqueIdentifier, $dateTime,$aboutTime, $nodeValues[0], $aboutMessage, $this->getProvider());
-
     }
 } 
